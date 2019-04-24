@@ -32,10 +32,12 @@
 
         /* Integer Math */
         ADD = "add",
+        ADD_IMMEDIATE = "addi",
         SUBSTRACT = "sub",
         DIVIDE = "div",
         MULTIPLY = "mult",
         SET_LESS_THAN = "slt",
+        SET_LESS_THAN_IMMEDIATE = "slti",
         SHIFT_LEFT_LOGICAL = "sll",
         SHIFT_RIGHT_LOGICAL = "srl",
 
