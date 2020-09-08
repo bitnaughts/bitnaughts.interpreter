@@ -2,7 +2,7 @@
 
 ![banner](https://raw.githubusercontent.com/bitnaughts/bitnaughts.assets/master/images/banner.png)
 
-<iframe  title="Microsoft 2020 Hackathon" width="480" height="390" src="http://www.youtube.com/watch?v=kQaZFAu65z4" frameborder="0" allowfullscreen></iframe>
+<iframe title="Microsoft 2020 Hackathon" width="480" height="390" src="http://www.youtube.com/watch?v=kQaZFAu65z4" frameborder="0" allowfullscreen></iframe>
 
 To set up the development environment, see [bitnaughts.unity](https://github.com/bitnaughts/bitnaughts.unity).
 
