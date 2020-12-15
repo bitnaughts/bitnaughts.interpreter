@@ -1,0 +1,13 @@
+{
+    "name": "com.bitnaughts.interpreter",
+    "displayName": "BitNaughts Interpreter",
+    "version": "1.0.0",
+    "unity": "2020.1",
+    "description": "Provides code parsing and visualizing functionalities.",
+    "keywords": [
+        "bitnaughts",
+        "interpreter"
+    ],
+    "dependencies": {
+    }
+}
