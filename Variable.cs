@@ -1,5 +1,3 @@
-
-
 /*
     In BitNaughts, all variables are "analog" values (floats) from -999 to 999.
 */

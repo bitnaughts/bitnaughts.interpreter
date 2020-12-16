@@ -7,93 +7,130 @@ using System.Threading.Tasks;
 
 public class Interpreter
 {
-    private List<Instruction> instructions; // Size restricted by static memory
-    private Dictionary<string, Variable> variables; // Size restricted by random access memory
+    public List<Instruction> instructions; // Size restricted by static memory
+    public Dictionary<string, Variable> variables; // Size restricted by random access memory
+    
+    public const string Set = "set",
+        /* Operations Format: $0 $1 $2                 */
+        /* $0 == opcode                                */
+        /* $1 == variable reference                    */
+        /* $2 == variable reference, or float constant */
 
+        /* Variable Declarations */
+        
+        /* Arithmetic */
+        Add = "add",
+        Abs = "abs", 
+        Subtract = "sub", 
+        Multiply = "mul",
+        Divide = "div",
+        Modulo = "mod",
+        /* Trigonometry */
+        Sine = "sin",
+        Cosine = "cos",
+        Tangent = "tan",
+        /* Stack Manipulation */
+        Jump = "jum",
+        Jump_If_Greater = "jig",
+        Jump_If_Equal = "jie",
+        Jump_If_Not_Equal = "jin",
+        Jump_If_Less = "jil",
 
+        /* Interactivity */
+        Component = "com",
+        Get = "get",
+        Print = "pri";
+
+    public const char Space = ' ',
+        New_Line = '\n';
+
+    public const string Variables = "var",
+        Pointer = "ptr",
+        Result = "res",
+        /* Input */
+        Input_W = "inw",
+        Input_A = "ina",
+        Input_S = "ins",
+        Input_D = "ind",
+        Input_Horz = "inh",
+        Input_Vert = "inv",
+        Random = "rnd";
 
     public Interpreter(string[] instructions) {
         
         variables = new Dictionary<string, Variable>();
-        variables.Add(Processor.Pointer, new Variable(0));
-        variables.Add(Processor.Result, new Variable(0));
+        variables.Add(Pointer, new Variable(0));
+        variables.Add(Result, new Variable(0));
 
         this.instructions = new List<Instruction>();
         foreach (var inst in instructions) if (inst != "") this.instructions.Add(new Instruction(inst));
     }
 
-    public void Iterate() {
+    public void Iterate(Dictionary<string, ComponentController> components) {
 
         if (instructions == null) Init(debug_instructions);
 
-        var inst = GetInstruction(Mathf.RoundToInt(variables[Processor.Pointer].value));
-        pointer = variables[Processor.Pointer].value;
+        var inst = GetInstruction(Mathf.RoundToInt(variables[Pointer].value));
+        pointer = variables[Pointer].value;
         switch (inst?.op_code)
         {
-            case Processor.Set:
+            case Set:
                 if (variables.ContainsKey(inst.dest_reg))
                     variables[inst.dest_reg].Set(Parse(inst.src_reg));
                 else
                     variables.Add(inst.dest_reg, new Variable(Parse(inst.src_reg)));
                 break;
-            case Processor.Add:
+            case Add:
                 variables[inst.dest_reg].Add(Parse(inst.src_reg));
                 break;
-            case Processor.Abs:
+            case Abs:
                 variables[inst.dest_reg].Set(Mathf.Abs(Parse(inst.dest_reg)));
                 break;
-            case Processor.Subtract:
+            case Subtract:
                 variables[inst.dest_reg].Subtract(Parse(inst.src_reg));
                 break;
-            case Processor.Multiply:
+            case Multiply:
                 variables[inst.dest_reg].Multiply(Parse(inst.src_reg));
                 break;
-            case Processor.Divide:
+            case Divide:
                 variables[inst.dest_reg].Divide(Parse(inst.src_reg));
                 break;
-            case Processor.Sine:
+            case Sine:
                 variables[inst.dest_reg].Set(Mathf.Sin(Parse(inst.src_reg)));
                 break;
-            case Processor.Cosine:
+            case Cosine:
                 variables[inst.dest_reg].Set(Mathf.Cos(Parse(inst.src_reg)));
                 break;
-            case Processor.Tangent:
+            case Tangent:
                 variables[inst.dest_reg].Set(Mathf.Tan(Parse(inst.src_reg)));
                 break;
-            case Processor.Jump:
-                variables[Processor.Pointer].Set(Parse(inst.dest_reg));
+            case Jump:
+                variables[Pointer].Set(Parse(inst.dest_reg));
                 break;
-            case Processor.Jump_If_Greater:
+            case Jump_If_Greater:
                 if (Parse(inst.dest_reg) > Parse(inst.src_reg))
-                    variables[Processor.Pointer].Set(Parse(inst.src_reg_2));
+                    variables[Pointer].Set(Parse(inst.src_reg_2));
                 break;
-            case Processor.Jump_If_Equal:
+            case Jump_If_Equal:
                 if (Parse(inst.dest_reg) == Parse(inst.src_reg))
-                    variables[Processor.Pointer].Set(Parse(inst.src_reg_2));
+                    variables[Pointer].Set(Parse(inst.src_reg_2));
                 break;
-            case Processor.Jump_If_Not_Equal:
+            case Jump_If_Not_Equal:
                 if (Parse(inst.dest_reg) != Parse(inst.src_reg))
-                    variables[Processor.Pointer].Set(Parse(inst.src_reg_2));
+                    variables[Pointer].Set(Parse(inst.src_reg_2));
                 break;
-            case Processor.Jump_If_Less:
+            case Jump_If_Less:
                 if (Parse(inst.dest_reg) < Parse(inst.src_reg))
-                    variables[Processor.Pointer].Set(Parse(inst.src_reg_2));
+                    variables[Pointer].Set(Parse(inst.src_reg_2));
                 break;
-            case Processor.Component:
+            case Component:
                 if (components.ContainsKey(inst.dest_reg)) {
-                    variables[Processor.Result].Set(components[inst.dest_reg].Action(Parse(inst.src_reg)));
+                    variables[Result].Set(components[inst.dest_reg].Action(Parse(inst.src_reg)));
                 }
                 break;
         }
-        if (pointer == variables[Processor.Pointer].value) variables[Processor.Pointer].Increment(); // If line pointer is unchanged, step to next instruction
+        if (pointer == variables[Pointer].value) variables[Pointer].Increment(); // If line pointer is unchanged, step to next instruction
     }
-
-    public float JumpTo(float line) {
-        if (line < 0) line = 0;
-        if (line > variables[Processor.Pointer]) line =
-        variables[Processor.Pointer].Set(line);
-    }
-
 
     public Instruction GetInstruction(int index) 
     {

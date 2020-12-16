@@ -17,9 +17,6 @@ public class ColorCoder {
     public static Color Color_screen = new Color (25 / 255f, 61 / 255f, 65 / 255f);
     public static Color Color_litScreen = new Color (34 / 255f, 76 / 255f, 79 / 255f);
 
-    public static string colorize (string line) {
-       
-    }
 
     public static string highlight (string line) {
         return "<color=#" + ColorCoder.getHighlightColor () + "55>" + line + "</mark>";
