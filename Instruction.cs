@@ -1,3 +1,5 @@
+
+
 public class Instruction
 {
     int red_color = 15;
@@ -10,7 +12,7 @@ public class Instruction
     // string[] ops;
     public Instruction(string line)
     {
-        var parts = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        var parts = line.Split(new char[] { ' ' });
         label = parts.Length > 0 ? parts[0] : null;
         op_code = parts.Length > 1 ? parts[1] : null;
         dest_reg = parts.Length > 2 ? parts[2] : null;

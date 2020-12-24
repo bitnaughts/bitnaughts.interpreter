@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using UnityEngine;
 
 public class Interpreter
 {
@@ -18,29 +19,69 @@ public class Interpreter
 
         /* Variable Declarations */
         
-        /* Arithmetic */
+        // UI allows for 10 options per operation category
+
+
+        /* ^ */
+        /* + */
+        /* Arithmetic https://en.wikipedia.org/wiki/Arithmetic#Arithmetic_operations */
         Add = "add",
-        Abs = "abs", 
         Subtract = "sub", 
+        Abs = "abs", 
         Multiply = "mul",
         Divide = "div",
         Modulo = "mod",
-        /* Trigonometry */
+        Exponential = "exp",
+        Root = "roo",
+        //
+        //
+        /* Trigonometry https://en.wikipedia.org/wiki/Trigonometry#Mnemonics */
         Sine = "sin",
         Cosine = "cos",
         Tangent = "tan",
-        /* Stack Manipulation */
+        Secant = "sec",
+        Cosecant = "csc",
+        Cotangent = "cot",
+        Arcsine = "acs",
+        Arccosine = "acc",
+        Arctangent = "act",
+        //
+        /* Boolean https://en.wikipedia.org/wiki/Boolean_algebra */
+        And = "and",
+        Or = "orr",
+        Not = "not",
+        Nand = "nand",
+        Nor = "nor",
+        Xor = "xor",
+        Xnor = "xnor",
+        //
+        //
+        //
+        /* Stack Pointer https://en.wikipedia.org/wiki/Call_stack#STACK-POINTER */
         Jump = "jum",
-        Jump_If_Greater = "jig",
         Jump_If_Equal = "jie",
         Jump_If_Not_Equal = "jin",
+        Jump_If_Greater = "jig",
         Jump_If_Less = "jil",
-
+        //
+        //
+        //
+        //
+        //
         /* Interactivity */
         Component = "com",
         Get = "get",
         Print = "pri";
-
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        /* Delete Current Line */
+        /* + */
+        /* v */
     public const char Space = ' ',
         New_Line = '\n';
 
@@ -68,10 +109,10 @@ public class Interpreter
 
     public void Iterate(Dictionary<string, ComponentController> components) {
 
-        if (instructions == null) Init(debug_instructions);
+        // if (instructions == null) Init(debug_instructions);
 
         var inst = GetInstruction(Mathf.RoundToInt(variables[Pointer].value));
-        pointer = variables[Pointer].value;
+        var pointer = variables[Pointer].value;
         switch (inst?.op_code)
         {
             case Set:
