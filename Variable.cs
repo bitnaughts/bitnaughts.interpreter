@@ -28,4 +28,8 @@ public class Variable
    public void Divide(float value) {
         Set(this.value / value);
     }
+    public override string ToString() 
+    {
+        return value.ToString(); // To be expanded on.
+    }
 }
