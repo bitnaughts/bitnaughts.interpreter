@@ -24,10 +24,15 @@ jum LOOP
         Pointer = "ptr",
         Result = "res",
         /* Input */
+        Input_Q = "inq",
         Input_W = "inw",
+        Input_E = "ine",
         Input_A = "ina",
         Input_S = "ins",
         Input_D = "ind",
+        Input_Z = "inz",
+        Input_X = "inx",
+        Input_C = "inc",
         Input_Horz = "inh",
         Input_Vert = "inv",
         Random = "rnd";
@@ -66,14 +71,14 @@ jum LOOP
         Xor  = "xor", Xor_Text = "Xor",   Xor_Description  = "\n <b>Xor</b> a value\n to a variable;",
         Xnor = "xnr", Xnor_Text = "Xnor", Xnor_Description = "\n <b>Xnor</b> a value\n to a variable;",
         /* Stack Pointer https://en.wikipedia.org/wiki/Call_stack#STACK-POINTER */
-        Jump_Label        = "LABEL", Jump_Label_Text = "Jump Label",               Jump_Label_Description = "Define a Jump Label to Jump to;",
-        Jump              = "jum",   Jump_Text = "Jump",                           Jump_Description = "Jump to a Jump Label or Line Number;",
-        Jump_If_Equal     = "jie",   Jump_If_Equal_Text = "Jump If Equal",         Jump_If_Equal_Description = "Jump if a value equal a value;",
-        Jump_If_Not_Equal = "jin",   Jump_If_Not_Equal_Text = "Jump If Not Equal", Jump_If_Not_Equal_Description = "Jump if a value doesn't equal a value;",
-        Jump_If_Greater   = "jig",   Jump_If_Greater_Text = "Jump If Greater",     Jump_If_Greater_Description = "Jump if a value is greater than a value;",
-        Jump_If_Less      = "jil",   Jump_If_Less_Text = "Jump If Less",           Jump_If_Less_Description = "Jump if a value is less than a value;",
+        Jump_Label        = "LABEL", Jump_Label_Text = "Jump Label",               Jump_Label_Description = "\n Define a <b>Jump Label</b>\n to <i>Jump</i> to;",
+        Jump              = "jum",   Jump_Text = "Jump",                           Jump_Description = "\n <b>Jump</b> to a defined\n <i>Jump Label</i>;",
+        Jump_If_Equal     = "jie",   Jump_If_Equal_Text = "Jump If Equal",         Jump_If_Equal_Description = "\n <b>Jump</b> if a value\n equals a value;",
+        Jump_If_Not_Equal = "jin",   Jump_If_Not_Equal_Text = "Jump If Not Equal", Jump_If_Not_Equal_Description = "\n <b>Jump</b> if a value\n doesn't equal a value;",
+        Jump_If_Greater   = "jig",   Jump_If_Greater_Text = "Jump If Greater",     Jump_If_Greater_Description = "\n <b>Jump</b> if a value\n is greater than a value;",
+        Jump_If_Less      = "jil",   Jump_If_Less_Text = "Jump If Less",           Jump_If_Less_Description = "\n <b>Jump</b> if a value\n is less than a value;",
         /* Interactivity */
-        Component = "com", Component_Text = "Component", Component_Description = "Send a value to a Component, result variable holds response;";
+        Component = "com", Component_Text = "Component", Component_Description = "\n Call <b>Component(Input)</b>,\n Returns value to <i>res</i> variable;";
     public const string Arithmetic = "Arithmetic",
         Flow_Control = "Flow Control",
         Boolean = "Boolean",
@@ -82,7 +87,7 @@ jum LOOP
     public static string[] Arithmetic_Operations = { 
         Set_Text, Add_Text, Subtract_Text, Absolute_Text, Multiply_Text, Divide_Text, Modulo_Text, Exponential_Text, Root_Text
     };
-    public static Tuple<string, string, string, string, string> OperationTypes = Tuple.Create(Arithmetic, Flow_Control, Boolean, Trigonometry, Interactivity);
+    public static string[] OperationTypes = new string[] {Arithmetic, Flow_Control, Boolean, Trigonometry, Interactivity};
     
     public static Tuple<string, string, string, string>[] OperationsArray = new Tuple<string, string, string, string>[]{
         /* Arithmetic https://en.wikipedia.org/wiki/Arithmetic#Arithmetic_operations */
@@ -114,9 +119,6 @@ jum LOOP
         Tuple.Create(Trigonometry, Sine_Text,       Sine,       Sine_Description),
         Tuple.Create(Trigonometry, Cosine_Text,     Cosine,     Cosine_Description),
         Tuple.Create(Trigonometry, Tangent_Text,    Tangent,    Tangent_Description),
-        Tuple.Create(Trigonometry, Secant_Text,     Secant,     Secant_Description),
-        Tuple.Create(Trigonometry, Cosecant_Text,   Cosecant,   Cosecant_Description),
-        Tuple.Create(Trigonometry, Cotangent_Text,  Cotangent,  Cotangent_Description),
         Tuple.Create(Trigonometry, Arcsine_Text,    Arcsine,    Arcsine_Description),
         Tuple.Create(Trigonometry, Arccosine_Text,  Arccosine,  Arccosine_Description),
         Tuple.Create(Trigonometry, Arctangent_Text, Arctangent, Arctangent_Description),
@@ -124,7 +126,24 @@ jum LOOP
         Tuple.Create(Interactivity, Component_Text, Component, Component_Description)
     };
 
+    public static bool IsCategory(string category)
+    {
+        foreach (var category_type in OperationTypes)
+        {
+            if (category == category_type) return true;
+        }
+        return false;
+    } 
 
+    public static string[] GetOperations(string category)
+    {
+        List<string> ops = new List<string>();
+        foreach (var operation in OperationsArray)
+        {
+            if (operation.Item1 == category) ops.Add(operation.Item2);
+        }
+        return ops.ToArray();
+    }
     public static string GetTextCode(string text)
     {
         foreach (var operation in OperationsArray)
@@ -137,7 +156,16 @@ jum LOOP
     {
         switch (text)
         {
-            case Arithmetic: return "\n <b>Arithmetic</b> ops\n compute analog \n values;";
+            case "Syntax": return "\n <b>Syntax</b> is a branch\n of semiotics dealing \n with relations between\n signs and expressions\n in abstraction from\n their signification and\n their interpreters;\n\n Use menu options to\n manipulate processor\n assembly code;";
+            case "Scroll Up": return "\n <b>Scrolling</b> moves\n the edit pointer;";
+            case "Scroll Down": return "\n <b>Scrolling</b> moves\n the edit pointer;";
+            case "Add Above": return "\n <b>Adding</b> inserts\n a new instruction to\n the instruction set;";
+            case "Add Below": return "\n <b>Adding</b> inserts\n a new instruction to\n the instruction set;";
+            case "Delete": return "\n <b>Deleting</b> removes\n an instruction from\n the instruction set;";
+            case "Constant": return "\n <b>Constant</b> values;";
+            case "Variable": return "\n <b>Variable</b> values;";
+            case "User Input": return "\n <b>User Input</b> enables\n manual control of ships;\n\n *Note: User-controlled ships\n cannot be submitted\n to global leaderboard;";
+            case Arithmetic: return "\n <b>Arithmetic</b> ops\n compute analog\n values;";
             case Flow_Control: return "\n <b>Flow Control</b> ops\n set the stack\n pointer to \n control code\n execution;";
             case Boolean: return "\n <b>Boolean</b> ops\n compute boolean \n values;";
             case Trigonometry: return "\n <b>Trigonometry</b> ops\n compute trig \n values;";
@@ -149,6 +177,15 @@ jum LOOP
         }
         return Jump_Label_Description;
     }
+    public static bool IsInstruction(string code)
+    {
+        foreach (var operation in OperationsArray)
+        {
+            if (operation.Item3 == code) return true;
+        }
+        return false;
+    }
+
     public static string GetTextCategory(string text)
     {
         foreach (var operation in OperationsArray)
@@ -192,7 +229,7 @@ jum LOOP
 
         var inst = GetInstruction(Mathf.RoundToInt(variables[Pointer].value));
         var pointer = variables[Pointer].value;
-        if (inst.dest_reg != null) switch (inst?.op_code)
+        if (inst != null && inst.dest_reg != null) switch (inst?.op_code)
         {
             case Set:
                 if (variables.ContainsKey(inst.dest_reg))
@@ -215,6 +252,27 @@ jum LOOP
             case Divide:
                 variables[inst.dest_reg].Divide(Parse(inst.src_reg));
                 break;
+            case Not:
+                variables[inst.dest_reg].Set(Convert.ToInt32(!(Parse(inst.src_reg) >= 1)));
+                break;
+            case And:
+                variables[inst.dest_reg].Set(Convert.ToInt32(variables[inst.dest_reg].value >= 1 && Parse(inst.src_reg) >= 1));
+                break;
+            case Nand:
+                variables[inst.dest_reg].Set(Convert.ToInt32(!(variables[inst.dest_reg].value >= 1 && Parse(inst.src_reg) >= 1)));
+                break;
+            case Or:
+                variables[inst.dest_reg].Set(Convert.ToInt32(variables[inst.dest_reg].value >= 1 || Parse(inst.src_reg) >= 1));
+                break;
+            case Nor:
+                variables[inst.dest_reg].Set(Convert.ToInt32(!(variables[inst.dest_reg].value >= 1 || Parse(inst.src_reg) >= 1)));
+                break;
+            case Xor:
+                variables[inst.dest_reg].Set(Convert.ToInt32(variables[inst.dest_reg].value >= 1 ^ Parse(inst.src_reg) >= 1));
+                break;
+            case Xnor:
+                variables[inst.dest_reg].Set(Convert.ToInt32(!(variables[inst.dest_reg].value >= 1 ^ Parse(inst.src_reg) >= 1)));
+                break;
             case Sine:
                 variables[inst.dest_reg].Set(Mathf.Sin(Parse(inst.src_reg)));
                 break;
@@ -223,6 +281,15 @@ jum LOOP
                 break;
             case Tangent:
                 variables[inst.dest_reg].Set(Mathf.Tan(Parse(inst.src_reg)));
+                break;
+            case Arcsine:
+                variables[inst.dest_reg].Set(Mathf.Asin(Parse(inst.src_reg)));
+                break;
+            case Arccosine:
+                variables[inst.dest_reg].Set(Mathf.Acos(Parse(inst.src_reg)));
+                break;
+            case Arctangent:
+                variables[inst.dest_reg].Set(Mathf.Atan(Parse(inst.src_reg)));
                 break;
             case Jump:
                 variables[Pointer].Set(Parse(inst.dest_reg));
@@ -251,16 +318,17 @@ jum LOOP
         }
         if (pointer == variables[Pointer].value) variables[Pointer].Increment(); // If line pointer is unchanged, step to next instruction
         
-        string output = "";
+        string output = " Code:\n";
         int i = 0;
         foreach (var instruction in instructions) 
         {
             string raw_line = instruction.ToString();
-            if (GetInstruction(Mathf.RoundToInt(pointer)) == instruction) raw_line = "<i>" + raw_line + "</i>";
+            if (i == Mathf.RoundToInt(pointer)) raw_line = "<i>" + raw_line + "</i>";
             if (i++ == edit_line) raw_line = "<b>" + raw_line + "</b>";
             
             output += " " + raw_line + "\n";
         }
+        output += "\n Memory:\n";
         foreach (var variable in variables)
         {
             output += "- " + variable.Key + ": " + variable.Value.ToString() + "\n";
@@ -293,6 +361,34 @@ jum LOOP
             }
         }
         return label;
+    }
+    
+    public string[] GetLabels()
+    {
+        List<string> labels = new List<string> ();
+        foreach (var instruction in instructions) if (!IsInstruction(instruction.op_code)) labels.Add(instruction.op_code);
+        return labels.ToArray();
+    }
+    public string[] GetVariables()
+    {
+        List<string> vars = new List<string> {Pointer, Result };
+        foreach (var instruction in instructions) if (instruction.op_code == Set) vars.Add(instruction.dest_reg);
+        return vars.ToArray();
+    }
+    public bool isVariable(string variable_in)
+    {
+        foreach (var variable in GetVariables()) {
+            if (variable == variable_in) return true;
+        }
+        return false;
+    }
+    public bool isLabel(string label)
+    {
+        foreach (var l in GetLabels())
+        {
+            if (label == l) return true;
+        }
+        return false;
     }
     public string GetNextVariable() 
     {
@@ -331,14 +427,24 @@ jum LOOP
         }
         switch (input)
         {
+            case Input_Q:
+                return Input.GetKey(KeyCode.Q) ? parse_value : 0;
             case Input_W:
                 return Input.GetKey(KeyCode.W) ? parse_value : 0;
+            case Input_E:
+                return Input.GetKey(KeyCode.E) ? parse_value : 0;
             case Input_A:
                 return Input.GetKey(KeyCode.A) ? parse_value : 0;
             case Input_S:
                 return Input.GetKey(KeyCode.S) ? parse_value : 0;
             case Input_D:
                 return Input.GetKey(KeyCode.D) ? parse_value : 0;
+            case Input_Z:
+                return Input.GetKey(KeyCode.Z) ? parse_value : 0;
+            case Input_X:
+                return Input.GetKey(KeyCode.X) ? parse_value : 0;
+            case Input_C:
+                return Input.GetKey(KeyCode.C) ? parse_value : 0;
             case Input_Vert:
                 return Input.GetAxis("Vertical");
             case Input_Horz:
