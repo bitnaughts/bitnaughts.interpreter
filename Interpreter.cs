@@ -74,11 +74,11 @@ jum LOOP
         Jump_Label        = "LABEL", Jump_Label_Text = "Jump Label",               Jump_Label_Description = "\n Define a <b>Jump Label</b>\n to <i>Jump</i> to;",
         Jump              = "jum",   Jump_Text = "Jump",                           Jump_Description = "\n <b>Jump</b> to a defined\n <i>Jump Label</i>;",
         Jump_If_Equal     = "jie",   Jump_If_Equal_Text = "Jump If Equal",         Jump_If_Equal_Description = "\n <b>Jump</b> if a value\n equals a value;",
-        Jump_If_Not_Equal = "jin",   Jump_If_Not_Equal_Text = "Jump If Not Equal", Jump_If_Not_Equal_Description = "\n <b>Jump</b> if a value\n doesn't equal a value;",
+        Jump_If_Not_Equal = "jin",   Jump_If_Not_Equal_Text = "Jump If Not", Jump_If_Not_Equal_Description = "\n <b>Jump</b> if a value\n doesn't equal a value;",
         Jump_If_Greater   = "jig",   Jump_If_Greater_Text = "Jump If Greater",     Jump_If_Greater_Description = "\n <b>Jump</b> if a value\n is greater than a value;",
         Jump_If_Less      = "jil",   Jump_If_Less_Text = "Jump If Less",           Jump_If_Less_Description = "\n <b>Jump</b> if a value\n is less than a value;",
         /* Interactivity */
-        Component = "com", Component_Text = "Component", Component_Description = "\n Call <b>Component(Input)</b>,\n Returns value to <i>res</i> variable;";
+        Component = "obj", Component_Text = "Objects", Component_Description = "\n Call <b>Component(Input)</b>,\n Returns value to <i>res</i> variable;";
     public const string Arithmetic = "Arithmetic",
         Flow_Control = "Flow Control",
         Boolean = "Boolean",
@@ -146,6 +146,7 @@ jum LOOP
     }
     public static string GetTextCode(string text)
     {
+        if (text.Contains(" ")) text = text.Substring(2);
         foreach (var operation in OperationsArray)
         {
             if (operation.Item2 == text) return operation.Item3;
@@ -221,6 +222,10 @@ jum LOOP
 
         this.instructions = new List<Instruction>();
         foreach (var inst in instructions) if (inst != "") this.instructions.Add(new Instruction(inst));
+    }
+
+    public int GetPointer() {
+        return Mathf.RoundToInt(variables[Pointer].value);
     }
 
     public string Iterate(Dictionary<string, ComponentController> components, int edit_line) {
@@ -369,6 +374,17 @@ jum LOOP
         foreach (var instruction in instructions) if (!IsInstruction(instruction.op_code)) labels.Add(instruction.op_code);
         return labels.ToArray();
     }
+    public string GetVariablesString() {
+        var output = "";
+        int count = 0;
+        foreach (var variable in variables)
+        {
+            count++;
+            if (count < variables.Count) output += "\n  ┣ " + variable.Key + ": " + variable.Value.ToString();
+            else output += "\n  ┗ " + variable.Key + ": " + variable.Value.ToString();
+        }
+        return output;
+    }
     public string[] GetVariables()
     {
         List<string> vars = new List<string> {Pointer, Result };
@@ -377,6 +393,7 @@ jum LOOP
     }
     public bool isVariable(string variable_in)
     {
+        if (variable_in.Contains("\t")) variable_in = variable_in.Substring(2);
         foreach (var variable in GetVariables()) {
             if (variable == variable_in) return true;
         }
@@ -452,7 +469,7 @@ jum LOOP
             case Random:
                 var random = new System.Random();
                 // print ((float)(random.NextDouble() * 2000 - 1000));
-                return (float)(random.NextDouble() * 2000 - 1000); 
+                return (float)(random.NextDouble() * 200 - 100); 
             default:
                 for (int i = 0; i < instructions.Count; i++) 
                     if (input == instructions[i].op_code) return i;
